@@ -107,17 +107,22 @@ interface PlaceholderConfig {
   style?: any
   [key: string]: any
 }
+interface BackgroundConfig {
+  style?: any
+}
 interface ImageProps {
   image: ImageConfig
   placeholder: PlaceholderConfig
+  background?: BackgroundConfig
 }
-export function Image({ placeholder, image }: ImageProps) {
+export function Image({ placeholder, image, background }: ImageProps) {
   const {
     src: placeholderSrc,
     style: placeholderStyles,
     ...placeholderProps
   } = placeholder
   const { src, srcSet, media, type, style: imageStyle, ...imageProps } = image
+  const backgroundStyle = (background && background.style) || {}
   const imgRef = React.useRef()
   const [imageVisible, setVisible] = React.useState(false)
   const [hidePlaceholder, setHidePlaceholder] = React.useState(false)
@@ -142,7 +147,10 @@ export function Image({ placeholder, image }: ImageProps) {
 
   return (
     <ImageHolder ref={handleRefChange}>
-      <Background isVisible={!imageVisible && !placeholderSrc} />
+      <Background
+        isVisible={!imageVisible && !placeholderSrc}
+        style={{ ...backgroundStyle }}
+      />
       {placeholderSrc && (
         <Placeholder
           hide={hidePlaceholder}
